@@ -17,6 +17,15 @@ func HandleError(err error) {
 }
 
 func UnTgz(file io.Reader, initialPath, outName string) {
+	initialPathTgz := initialPath
+	FIRST_CHAR := 0
+	if initialPath[FIRST_CHAR] == "/"[FIRST_CHAR] {
+		initialPathTgz = strings.Replace(initialPathTgz, "/", "", 1)
+	}
+	if initialPath[len(initialPath)-1] != "/"[FIRST_CHAR] {
+		initialPathTgz += "/"
+	}
+
 	fileGzip, err := gzip.NewReader(file)
 	HandleError(err)
 
@@ -31,11 +40,20 @@ func UnTgz(file io.Reader, initialPath, outName string) {
 		if header.Typeflag != tar.TypeDir {
 			paths := strings.Split(header.Name, "/")
 			folder := strings.Replace(header.Name, paths[len(paths)-1], "", -1)
+			filename := header.Name
+
+			oldFolder := folder
+			folder = strings.Replace(folder, initialPathTgz, "", 1)
+			if oldFolder == folder && initialPathTgz != "" {
+				continue
+			}
+
+			filename = strings.Replace(filename, initialPathTgz, "", 1)
 
 			err = os.MkdirAll(path.Join(outName, folder), os.ModePerm)
 			HandleError(err)
 
-			outFile, err := os.Create(path.Join(outName, header.Name))
+			outFile, err := os.Create(path.Join(outName, filename))
 			HandleError(err)
 			defer outFile.Close()
 
