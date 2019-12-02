@@ -16,5 +16,5 @@ func TestUnTgz(t *testing.T) {
 	resp, err := http.Get(url)
 	HandleError(err)
 
-	UnTgz(resp.Body, out)
+	UnTgz(resp.Body, "/", out)
 }

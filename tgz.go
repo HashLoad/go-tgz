@@ -16,7 +16,7 @@ func HandleError(err error) {
 	}
 }
 
-func UnTgz(file io.Reader, outName string) {
+func UnTgz(file io.Reader, initialPath, outName string) {
 	fileGzip, err := gzip.NewReader(file)
 	HandleError(err)
 

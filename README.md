@@ -3,6 +3,6 @@
 ## Get started
 ```go
 
-    tgz.UnTgz(File, "/output")
+    tgz.UnTgz(File, "/", "/output")
 
 ```
